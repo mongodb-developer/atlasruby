@@ -9,18 +9,13 @@ class Atlas
         @auth= {:username=>u,:password=>p}
     end
 
-    def getBase()
-        options = { :digest_auth => @auth }
-        self.class.get('',options)
+    def get(uri)
+        self.class.get(uri,{ :digest_auth => @auth })
     end
 end
 
+client=Atlas.new(ENV['ATLAS_USER'],ENV['ATLAS_USER_KEY'])
 
-user = ENV['ATLAS_USER']
-userkey = ENV['ATLAS_USER_KEY']
+result=JSON.parse(client.get('').body())
 
-client=Atlas.new(user,userkey)
-
-result=JSON.parse(client.getBase().body())
-
-print JSON.pretty_generate(result)
+pp result
