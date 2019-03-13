@@ -1,21 +1,9 @@
 require 'httparty'
 require 'json'
 
-class Atlas
-    include HTTParty
-    base_uri 'https://cloud.mongodb.com/api/atlas/v1.0/'
+auth={:username=>ENV['ATLAS_USER'],:password=>ENV['ATLAS_USER_KEY']}
+baseurl='https://cloud.mongodb.com/api/atlas/v1.0/'
 
-    def initialize(u,p)
-        @auth= {:username=>u,:password=>p}
-    end
+result=HTTParty.get(baseurl,  { :digest_auth => auth } )
 
-    def get(uri)
-        self.class.get(uri,{ :digest_auth => @auth })
-    end
-end
-
-client=Atlas.new(ENV['ATLAS_USER'],ENV['ATLAS_USER_KEY'])
-
-result=JSON.parse(client.get('').body())
-
-pp result
+pp JSON.parse(result.body())
